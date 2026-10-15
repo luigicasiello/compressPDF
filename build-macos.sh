@@ -76,4 +76,3 @@ echo
 echo "Build macOS completata:"
 echo "  $APP_PATH"
 echo "  $DMG_PATH"
-
