@@ -1,0 +1,54 @@
+name: Build macOS
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: macOS ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: apple-silicon
+            runner: macos-15
+          - arch: intel
+            runner: macos-15-intel
+
+    steps:
+      - name: Scarica il progetto
+        uses: actions/checkout@v4
+
+      - name: Configura Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Compila app e DMG
+        run: bash build-macos.sh
+
+      - name: Prepara i file da scaricare
+        run: |
+          mv "dist/macos/ComprimiPDF.dmg" "dist/macos/ComprimiPDF-${{ matrix.arch }}.dmg"
+          ditto -c -k --sequesterRsrc --keepParent \
+            "dist/macos/ComprimiPDF.app" \
+            "dist/macos/ComprimiPDF-${{ matrix.arch }}.zip"
+
+      - name: Carica il risultato
+        uses: actions/upload-artifact@v4
+        with:
+          name: ComprimiPDF-macOS-${{ matrix.arch }}
+          path: |
+            dist/macos/ComprimiPDF-${{ matrix.arch }}.dmg
+            dist/macos/ComprimiPDF-${{ matrix.arch }}.zip
+          if-no-files-found: error
+          retention-days: 30

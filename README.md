@@ -93,4 +93,3 @@ Le build cloud predefinite hanno una firma ad-hoc per uso locale. La distribuzio
 ## Componenti
 
 L'app usa PySide6 (LGPL), Pillow e PyMuPDF. PyMuPDF è distribuito con licenza AGPL/commerciale: per distribuire pubblicamente il programma occorre rispettarne i termini o acquistare una licenza commerciale. Per uso personale locale questo progetto può essere compilato e utilizzato direttamente.
-
