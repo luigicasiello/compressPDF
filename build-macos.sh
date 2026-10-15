@@ -2,6 +2,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
+PROJECT_DIR="$(pwd)"
 
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 VENV_DIR=".venv-macos"
@@ -32,11 +33,11 @@ echo "Creazione di ComprimiPDF.app..."
     --distpath "$DIST_DIR" \
     --workpath "$WORK_DIR" \
     --specpath "$WORK_DIR" \
-    --icon "assets/dog_mascot.icns" \
-    --add-data "assets:assets" \
+    --icon "$PROJECT_DIR/assets/dog_mascot.icns" \
+    --add-data "$PROJECT_DIR/assets:assets" \
     --collect-all pymupdf \
     --osx-bundle-identifier "it.localtools.comprimipdf" \
-    app.py
+    "$PROJECT_DIR/app.py"
 
 if [[ -n "${MACOS_SIGN_IDENTITY:-}" ]]; then
     echo "Firma con Developer ID: $MACOS_SIGN_IDENTITY"
@@ -75,3 +76,4 @@ echo
 echo "Build macOS completata:"
 echo "  $APP_PATH"
 echo "  $DMG_PATH"
+
